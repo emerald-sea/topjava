@@ -21,7 +21,8 @@
     </thead>
     <tbody>
     <c:forEach var="meal" items="${meals}">
-        <tr>
+        <tr class="<c:if test="${meal.excess eq false}">green</c:if>
+                   <c:if test="${meal.excess eq true}">red</c:if>">
             <td>${meal.dateTime}</td>
             <td>${meal.description}</td>
             <td>${meal.calories}</td>
@@ -46,6 +47,14 @@
         border-color: #cfcfcf;
         border-style: solid;
         padding: 3px;
+    }
+
+    table tr.red {
+        color: red;
+    }
+
+    table tr.green {
+        color: green;
     }
 </style>
 </body>

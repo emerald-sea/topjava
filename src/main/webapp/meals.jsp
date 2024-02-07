@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html lang="ru">
 <head>
@@ -16,18 +16,14 @@
         <th>Date and Time</th>
         <th>Description</th>
         <th>Calories</th>
-        <th>Excess</th>
     </tr>
     </thead>
     <tbody>
     <c:forEach var="meal" items="${meals}">
-        <tr class="<c:if test="${meal.excess eq false}">green</c:if>
-                   <c:if test="${meal.excess eq true}">red</c:if>">
-            <td>${meal.dateTime}</td>
+        <tr class="${meal.excess eq false ? 'green' : 'red'}">
+            <td>${meal.dateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"))}</td>
             <td>${meal.description}</td>
             <td>${meal.calories}</td>
-            <td>${meal.excess}</td>
-
         </tr>
     </c:forEach>
     </tbody>

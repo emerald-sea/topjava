@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
+
 public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
@@ -34,7 +36,8 @@ public class MealServlet extends HttpServlet {
         Meal meal = new Meal(id.isEmpty() ? null : Integer.valueOf(id),
                 LocalDateTime.parse(request.getParameter("dateTime")),
                 request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories")));
+                Integer.parseInt(request.getParameter("calories")),
+                SecurityUtil.authUserId());
 
         log.info(meal.isNew() ? "Create {}" : "Update {}", meal);
         repository.save(meal);
@@ -49,14 +52,23 @@ public class MealServlet extends HttpServlet {
             case "delete":
                 int id = getId(request);
                 log.info("Delete id={}", id);
-                repository.delete(id);
+                if (!repository.delete(id, SecurityUtil.authUserId())) {
+                    checkNotFound(false, " id = " + id);
+                }
                 response.sendRedirect("meals");
                 break;
             case "create":
             case "update":
-                final Meal meal = "create".equals(action) ?
-                        new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000) :
-                        repository.get(getId(request));
+                final Meal meal;
+                if ("create".equals(action)) {
+                    meal = new Meal(LocalDateTime.now()
+                            .truncatedTo(ChronoUnit.MINUTES), "", 1000, SecurityUtil.authUserId());
+                } else {
+                    if (repository.get(getId(request), SecurityUtil.authUserId()) == null) {
+                        checkNotFound(false, " id = " + getId(request));
+                    }
+                    meal = repository.get(getId(request), SecurityUtil.authUserId());
+                }
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;

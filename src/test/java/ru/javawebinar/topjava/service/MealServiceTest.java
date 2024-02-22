@@ -14,7 +14,6 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.List;
 
@@ -22,7 +21,6 @@ import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
-
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -66,15 +64,15 @@ public class MealServiceTest {
 
     @Test
     public void getBetweenInclusive() {
-        List<Meal> all = service.getBetweenInclusive(LocalDate.of(2020, Month.JANUARY, 30),
-                LocalDate.of(2020, Month.JANUARY, 31), ADMIN_ID);
-        MealTestData.assertMatch(all, meal6, meal5, meal4, meal3);
+        List<Meal> all = service.getBetweenInclusive(LocalDate.of(2020, Month.JANUARY, 31),
+                LocalDate.of(2020, Month.APRIL, 17), ADMIN_ID);
+        MealTestData.assertMatch(all, meal8, meal6, meal5, meal4, meal3);
     }
 
     @Test
     public void getAll() {
         List<Meal> all = service.getAll(USER_ID);
-        MealTestData.assertMatch(all, meal2, meal1, meal);
+        MealTestData.assertMatch(all, meal7, meal2, meal1, meal);
     }
 
     @Test
@@ -102,7 +100,7 @@ public class MealServiceTest {
     @Test
     public void duplicateDateTimeCreate() {
         assertThrows(DataAccessException.class, () ->
-                service.create(new Meal(null, LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0),
+                service.create(new Meal(null, meal.getDateTime(),
                         "Duplicate meal", 100), USER_ID));
     }
 

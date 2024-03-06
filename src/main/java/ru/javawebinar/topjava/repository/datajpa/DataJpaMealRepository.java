@@ -22,25 +22,21 @@ public class DataJpaMealRepository implements MealRepository {
     }
 
     @Override
-    @Transactional(readOnly = true, propagation= Propagation.SUPPORTS)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Meal save(Meal meal, int userId) {
         meal.setUser(crudUserRepository.getReferenceById(userId));
-        if (meal.isNew()) {
-            return crudRepository.save(meal);
-        }
-        return get(meal.id(), userId) == null ? null : crudRepository.save(meal);
+        return meal.isNew() || get(meal.id(), userId) != null ? crudRepository.save(meal) : null;
     }
 
     @Override
-    @Transactional(readOnly = true, propagation= Propagation.SUPPORTS)
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public boolean delete(int id, int userId) {
         return crudRepository.delete(id, userId) != 0;
     }
 
     @Override
     public Meal get(int id, int userId) {
-        Meal meal = crudRepository.findById(id).orElse(null);
-        return meal != null && meal.getUser().getId() == userId ? meal : null;
+        return crudRepository.getByIdAndUserId(id, userId);
     }
 
     @Override

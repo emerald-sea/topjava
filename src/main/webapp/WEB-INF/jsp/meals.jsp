@@ -33,7 +33,7 @@
         <button type="submit">Filter</button>
     </form>
     <hr/>
-    <a href="meals?action=create">Add Meal</a>
+    <a href="create">Add Meal</a>
     <br><br>
     <table border="1" cellpadding="8" cellspacing="0">
         <thead>
@@ -56,8 +56,13 @@
                 </td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
-                <td><a href="meals?action=update&id=${meal.id}">Update</a></td>
-                <td><a href="meals?action=delete&id=${meal.id}">Delete</a></td>
+                <td><a href="meals/${meal.id}/update">Update</a></td>
+                <td>
+                    <form action="meals/${meal.id}/delete" method="POST">
+                        <input type="submit" name="btnInsert" value="Delete"/>
+                        <input type="hidden" name="id" value="${meal.id}">
+                    </form>
+                </td>
             </tr>
         </c:forEach>
     </table>

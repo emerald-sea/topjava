@@ -14,7 +14,6 @@ import static ru.javawebinar.topjava.MealToTestData.*;
 import static ru.javawebinar.topjava.UserTestData.*;
 
 class RootControllerTest extends AbstractControllerTest {
-
     @Test
     void getUsers() throws Exception {
         perform(get("/users"))

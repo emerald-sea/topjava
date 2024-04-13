@@ -55,7 +55,7 @@ $(function () {
             "order": [
                 [
                     0,
-                    "asc"
+                    "desc"
                 ]
             ],
             "createdRow": function (row, data, dataIndex) {

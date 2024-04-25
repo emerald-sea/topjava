@@ -40,11 +40,7 @@ public class MealUIController extends AbstractMealController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void createOrUpdate(@Valid Meal meal, BindingResult result) {
-        if (result.hasErrors()) {
-            String msg = ValidationUtil.getErrorResponse(result);
-            throw new IllegalRequestDataException(msg);
-        }
+    public void createOrUpdate(@Valid Meal meal) {
         if (meal.isNew()) {
             super.create(meal);
         } else {
